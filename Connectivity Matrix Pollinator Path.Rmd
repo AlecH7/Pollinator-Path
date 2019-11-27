@@ -1,0 +1,240 @@
+---
+title: "Connectivity Matrix"
+author: "Alec Henriksen"
+date: "August 5, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(rmarkdown)
+library(knitr)
+library(readxl)
+library(Stat2Data)
+library(tidyverse)
+```
+
+## R Markdown
+
+```{r}
+Purple <- read.csv("C:/Users/AlecH/OneDrive/Documents/Purple Matrix CSV.csv")
+Preferred <- read.csv("C:/Users/AlecH/OneDrive/Documents/%Preferred.csv")
+Native <- read.csv("C:/Users/AlecH/OneDrive/Documents/%Native.csv")
+Diversity <- read.csv("C:/Users/AlecH/OneDrive/Documents/Diversity.csv")
+
+Purple <- as.matrix(Purple)
+Preferred <- as.matrix(Preferred)
+Native <- as.matrix(Native)
+Diversity <- as.matrix(Diversity)
+
+Distance <- read.csv("C:/Users/AlecH/OneDrive/Documents/DistanceMatrix.csv")
+Roads <- read.csv("C:/Users/AlecH/OneDrive/Documents/Roads.csv")
+Buildings <- read.csv("C:/Users/AlecH/OneDrive/Documents/BuildingsMatrix.csv")
+
+Distance <- as.matrix(Distance)
+Roads <- as.matrix(Roads)
+Buildings <- as.matrix(Buildings)
+
+```
+
+Diagonal Matrix
+```{r}
+Diversity.Fixed <- Diversity*.02
+
+Purple.Weighted <- Purple * .2
+Preferred.Weighted <- Preferred * .5
+Native.Weighted <- Native * .3
+Diversity.Weighted <- Diversity.Fixed * .4
+  
+Diagonal.Matrix <- Purple.Weighted + Preferred.Weighted + Native.Weighted + Diversity.Weighted  
+Diagonal.Matrix
+```
+
+
+
+non-diagonal Matrix
+```{r}
+Fixed.Roads <- (Roads - 1) * -1
+Fixed.Buildings <- (Buildings - 1) * -1
+Fixed.Distance <- (.5-Distance)
+
+Roads.Weighted <- Fixed.Roads * .1
+Buildings.Weighted <- Fixed.Buildings * .15
+Distance.Weighted <- Fixed.Distance *.85
+
+non.Diagonal.Matrix <- Roads.Weighted + Buildings.Weighted + Distance.Weighted
+non.Diagonal.Matrix
+
+
+```
+
+```{r}
+non.Diagonal.Matrix[1,1] = 0
+non.Diagonal.Matrix[2,2] = 0
+non.Diagonal.Matrix[3,3] = 0
+non.Diagonal.Matrix[4,4] = 0
+non.Diagonal.Matrix[5,5] = 0
+non.Diagonal.Matrix[6,6] = 0
+non.Diagonal.Matrix[7,7] = 0
+non.Diagonal.Matrix[8,8] = 0
+non.Diagonal.Matrix[9,9] = 0
+non.Diagonal.Matrix[10,10] = 0
+
+non.Diagonal.Matrix[1,] = non.Diagonal.Matrix[1,] * .263202762
+non.Diagonal.Matrix[2,] = non.Diagonal.Matrix[2,] * .3645770374
+non.Diagonal.Matrix[3,] = non.Diagonal.Matrix[3,] * .2919222175
+non.Diagonal.Matrix[4,] = non.Diagonal.Matrix[4,] * .2570436748
+non.Diagonal.Matrix[5,] = non.Diagonal.Matrix[5,] * .1251861894
+non.Diagonal.Matrix[6,] = non.Diagonal.Matrix[6,] * .139657444
+non.Diagonal.Matrix[7,] = non.Diagonal.Matrix[7,] * .1512250959
+non.Diagonal.Matrix[8,] = non.Diagonal.Matrix[8,] * .3564738401
+non.Diagonal.Matrix[9,] = non.Diagonal.Matrix[9,] * .1069038077
+non.Diagonal.Matrix[10,] = non.Diagonal.Matrix[10,] * .1237193118
+
+non.Diagonal.Matrix
+```
+
+
+Connectivity Matrix
+```{r}
+Connectivity.Matrix <- Diagonal.Matrix + non.Diagonal.Matrix
+Connectivity.Matrix
+
+```
+
+```{r}
+simulator(Connectivity.Matrix)
+
+```
+
+
+Connectivity Matrix Bed 4 Removal
+```{r}
+non.Diagonal.Matrix[4,] = non.Diagonal.Matrix[4,] * 0
+non.Diagonal.Matrix[,4] = non.Diagonal.Matrix[,4] * 0
+
+
+
+non.Diagonal.Matrix
+```
+
+Sums
+```{r}
+sum(non.Diagonal.Matrix[1,])
+sum(non.Diagonal.Matrix[2,])
+sum(non.Diagonal.Matrix[3,])
+sum(non.Diagonal.Matrix[4,])
+sum(non.Diagonal.Matrix[5,])
+sum(non.Diagonal.Matrix[6,])
+sum(non.Diagonal.Matrix[7,])
+sum(non.Diagonal.Matrix[8,])
+sum(non.Diagonal.Matrix[9,])
+sum(non.Diagonal.Matrix[10,])
+```
+Sums
+```{r}
+sum(Connectivity.Matrix[1,])
+sum(Connectivity.Matrix[2,])
+sum(Connectivity.Matrix[3,])
+sum(Connectivity.Matrix[4,])
+sum(Connectivity.Matrix[5,])
+sum(Connectivity.Matrix[6,])
+sum(Connectivity.Matrix[7,])
+sum(Connectivity.Matrix[8,])
+sum(Connectivity.Matrix[9,])
+sum(Connectivity.Matrix[10,])
+```
+
+Alterations Bed 4
+```{r}
+non.Diagonal.Matrix[1,] = non.Diagonal.Matrix[1,] * (.6175/.5295281)
+non.Diagonal.Matrix[2,] = non.Diagonal.Matrix[2,] * (.754/0.6498924)
+non.Diagonal.Matrix[3,] = non.Diagonal.Matrix[3,] * (.614/0.4843854)
+
+non.Diagonal.Matrix[5,] = non.Diagonal.Matrix[5,] * (.374/0.2849711)
+non.Diagonal.Matrix[6,] = non.Diagonal.Matrix[6,] * (.424/0.3529335)
+non.Diagonal.Matrix[7,] = non.Diagonal.Matrix[7,] * (.4180769/0.3593352)
+non.Diagonal.Matrix[8,] = non.Diagonal.Matrix[8,] * (.8182857/0.7288393)
+non.Diagonal.Matrix[9,] = non.Diagonal.Matrix[9,] * (.2536667/0.2258055)
+``` 
+ 
+```{r} 
+Connectivity.Without.4 = non.Diagonal.Matrix + Diagonal.Matrix  
+Connectivity.Without.4
+
+simulator(Connectivity.Without.4)
+```
+
+Connectivity Matrix Bed 5 Removal
+```{r}
+non.Diagonal.Matrix[5,] = non.Diagonal.Matrix[5,] * 0
+non.Diagonal.Matrix[,5] = non.Diagonal.Matrix[,5] * 0
+
+
+
+non.Diagonal.Matrix
+```
+
+Alterations Bed 5
+```{r}
+non.Diagonal.Matrix[1,] = non.Diagonal.Matrix[1,] * (.6175/.5381107)
+non.Diagonal.Matrix[2,] = non.Diagonal.Matrix[2,] * (.754/0.6616782)
+non.Diagonal.Matrix[3,] = non.Diagonal.Matrix[3,] * (.614/0.5377986)
+non.Diagonal.Matrix[4,] = non.Diagonal.Matrix[4,] * (.796/0.6154977)
+#non.Diagonal.Matrix[5,] = non.Diagonal.Matrix[5,] * (.374/0.2849711)
+non.Diagonal.Matrix[6,] = non.Diagonal.Matrix[6,] * (.424/0.3497552)
+non.Diagonal.Matrix[7,] = non.Diagonal.Matrix[7,] * (.4180769/0.3567245)
+non.Diagonal.Matrix[8,] = non.Diagonal.Matrix[8,] * (.8182857/0.714839)
+non.Diagonal.Matrix[9,] = non.Diagonal.Matrix[9,] * (.2536667/0.2216263)
+``` 
+
+Connectivity without 5 matrix
+```{r}
+Connectivity.Without.5 = non.Diagonal.Matrix + Diagonal.Matrix  
+Connectivity.Without.5
+
+simulator(Connectivity.Without.5)
+```
+
+Connectivity Matrix Bed 6 Removal
+```{r}
+non.Diagonal.Matrix[6,] = non.Diagonal.Matrix[6,] * 0
+non.Diagonal.Matrix[,6] = non.Diagonal.Matrix[,6] * 0
+
+
+
+non.Diagonal.Matrix
+```
+
+Alterations Bed 6
+```{r}
+non.Diagonal.Matrix[1,] = non.Diagonal.Matrix[1,] * (.6175/.5462166)
+non.Diagonal.Matrix[2,] = non.Diagonal.Matrix[2,] * (.754/.669208)
+non.Diagonal.Matrix[3,] = non.Diagonal.Matrix[3,] * (.614/.5359335)
+non.Diagonal.Matrix[4,] = non.Diagonal.Matrix[4,] * (.796/.6682282)
+non.Diagonal.Matrix[5,] = non.Diagonal.Matrix[5,] * (.374/.3081609)
+#non.Diagonal.Matrix[6,] = non.Diagonal.Matrix[6,] * (.424/)
+non.Diagonal.Matrix[7,] = non.Diagonal.Matrix[7,] * (.4180769/.3232968)
+non.Diagonal.Matrix[8,] = non.Diagonal.Matrix[8,] * (.8182857/.7039499)
+non.Diagonal.Matrix[9,] = non.Diagonal.Matrix[9,] * (.2536667/.2181437)
+``` 
+
+Connectivity without 5 matrix
+```{r}
+Connectivity.Without.6 = non.Diagonal.Matrix + Diagonal.Matrix  
+Connectivity.Without.6
+
+simulator(Connectivity.Without.6)
+```
+
+New Bed
+
+```{r}
+
+```
+
+
+```{r}
+
+```
+
